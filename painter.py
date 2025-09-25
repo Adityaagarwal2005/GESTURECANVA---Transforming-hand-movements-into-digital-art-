@@ -16,7 +16,7 @@ cv2.resizeWindow("ADITYA'S WEBCAM", 640, 480)
 
 # ----------------- Canvas Setup -----------------
 canvas = None  # Will create after getting first frame
-draw_color = (0,255,0)  # green color
+draw_color = (0,255,0,128)  # green color
 brush_thickness = 2
 prev_points = [(0, 0), (0, 0)]  # Previous fingertip coordinates for 2 hands
 
@@ -29,8 +29,8 @@ while True:
     frame = cv2.flip(frame, 1)  # Mirror
 
     if canvas is None:
-        canvas = np.zeros_like(frame)  # Same size as frame
-
+        canvas = np.zeros((frame.shape[0], frame.shape[1], 4), dtype=np.uint8)  # Same size as frame
+    frame_bgra = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = hands.process(frame_rgb)
 
@@ -52,16 +52,22 @@ while True:
         prev_points = [(0, 0), (0, 0)]  # Reset when no hands detected
 
     # Merge canvas with frame
-    merged = cv2.addWeighted(frame, 0.5, canvas, 0.5, 0)
+    alpha_canvas = canvas[:, :, 3] / 255.0  # Alpha channel (0-1)
+    for c in range(3):  # For B, G, R channels
+        frame_bgra[:, :, c] = (1 - alpha_canvas) * frame_bgra[:, :, c] + alpha_canvas * canvas[:, :, c]
 
-    cv2.imshow("ADITYA'S WEBCAM", merged)
+    cv2.imshow("ADITYA'S WEBCAM", cv2.cvtColor(frame_bgra, cv2.COLOR_BGRA2BGR))
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
-        # Ask user for filename and save
-        image=input("Enter a name for your drawing (without extension): ")
-        image=image+".png"
-        cv2.imwrite(image, canvas)
-        print(f"Saved your drawing as {image}")
+        # Ask user if they want to save
+        choice = input("Do you want to save your drawing? (y/n): ").lower()
+        if choice == 'y':
+            image_name = input("Enter a name for your drawing (without extension): ")
+            image_name = image_name + ".png"
+            cv2.imwrite(image_name, canvas)
+            print(f"✅ Saved your drawing as {image_name}")
+        else:
+            print(" Drawing discarded.")
         break
     elif key == ord('f'):  # Toggle fullscreen
         cv2.setWindowProperty("ADITYA'S WEBCAM", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)

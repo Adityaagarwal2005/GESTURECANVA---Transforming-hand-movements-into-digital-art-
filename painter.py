@@ -16,8 +16,8 @@ cv2.resizeWindow("ADITYA'S WEBCAM", 640, 480)
 
 # ----------------- Canvas Setup -----------------
 canvas = None  # Will create after getting first frame
-draw_color = (0, 0, 255)  # Red color
-brush_thickness = 5
+draw_color = (0,255,0)  # green color
+brush_thickness = 2
 prev_points = [(0, 0), (0, 0)]  # Previous fingertip coordinates for 2 hands
 
 while True:

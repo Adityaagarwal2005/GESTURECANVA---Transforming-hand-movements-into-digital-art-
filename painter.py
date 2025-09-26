@@ -21,6 +21,10 @@ brush_thickness = 2
 prev_points = {"Left": (0, 0), "Right": (0, 0)}  # Previous fingertip coordinates for 2 hands
 drawing_enabled = False  # 🆕 NEW: Track whether drawing is active or paused
 
+colors = [(0,255,0,128), (0,0,255,128), (255,0,0,128), (0,255,255,128)]  # Green, Red, Blue, Yellow
+color_index = 0  # current color
+
+
 # 🆕 NEW FUNCTION: Count how many fingers are up
 def count_fingers(hand_landmarks, h, w):
     tips = [4, 8, 12, 16, 20]  # Thumb, Index, Middle, Ring, Pinky tips
@@ -78,7 +82,23 @@ while True:
             if fingers_up == 5:
                 any_pause = True
     
-    
+            # 🆕 Change color with 2 fingers
+            if fingers_up == 2:
+                color_index = (color_index + 1) % len(colors)
+                draw_color = colors[color_index]
+            
+            # 🆕 Increase brush thickness with 3 fingers
+            if fingers_up == 3:
+                brush_thickness += 1
+                if brush_thickness > 10:  # max limit
+                    brush_thickness = 10
+            
+            # 🆕 Decrease brush thickness with 4 fingers
+            if fingers_up == 4:
+                brush_thickness -= 1
+                if brush_thickness < 1:  # min limit
+                    brush_thickness = 1
+            
             # 🆕 NEW: Only draw if drawing_enabled is True
             if drawing_enabled:
                 hand_label = results.multi_handedness[hand_idx].classification[0].label

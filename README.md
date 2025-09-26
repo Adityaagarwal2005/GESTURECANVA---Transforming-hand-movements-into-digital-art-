@@ -26,3 +26,25 @@ OpenCV – for video capture and drawing
 MediaPipe – for hand detection and landmark estimation
 
 NumPy – for numerical operations (optional, used for arrays/drawing logic)
+
+-->project features
+
+Hand Gesture Drawing: Draw with 1 finger (index); shows Drawing ON / Paused dynamically.
+
+Pause / Resume: Open palm (5 fingers) pauses drawing; resumes when index finger is shown.
+
+Custom Canvas: Transparent overlay on webcam; lines follow fingertip smoothly.
+
+Finger-Based Controls:
+
+1 finger → Draw
+
+2 fingers → Change color
+
+(Can extend for brush size, clear canvas, etc.)
+
+Persistent Drawing: Lines are stored on a separate canvas, preventing unwanted connections.
+
+Save Drawing: Press q to save as .png.
+
+Fullscreen Toggle: Press f for fullscreen webcam view.

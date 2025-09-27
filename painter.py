@@ -133,7 +133,7 @@ while True:
 
     cv2.imshow("ADITYA'S WEBCAM", cv2.cvtColor(frame_bgra, cv2.COLOR_BGRA2BGR))
     key = cv2.waitKey(1) & 0xFF
-    if key == ord('q'):
+    if key == ord('e'):
         # Ask user if they want to save
         choice = input("Do you want to save your drawing? (y/n): ").lower()
         if choice == 'y':
